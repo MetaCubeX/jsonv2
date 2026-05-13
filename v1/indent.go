@@ -10,7 +10,7 @@ import (
 	"bytes"
 	"strings"
 
-	"github.com/go-json-experiment/json/jsontext"
+	"github.com/metacubex/jsonv2/jsontext"
 )
 
 // HTMLEscape appends to dst the JSON-encoded src with <, >, &, U+2028 and U+2029

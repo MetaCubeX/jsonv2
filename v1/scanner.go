@@ -11,9 +11,9 @@ import (
 	"io"
 	"strings"
 
-	"github.com/go-json-experiment/json/internal"
-	"github.com/go-json-experiment/json/internal/jsonflags"
-	"github.com/go-json-experiment/json/jsontext"
+	"github.com/metacubex/jsonv2/internal"
+	"github.com/metacubex/jsonv2/internal/jsonflags"
+	"github.com/metacubex/jsonv2/jsontext"
 )
 
 // export exposes internal functionality of the "jsontext" package.

@@ -14,7 +14,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/go-json-experiment/json/internal/jsonwire"
+	"github.com/metacubex/jsonv2/internal/jsonwire"
 )
 
 func baseLabel(base uint64) string {

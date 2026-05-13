@@ -11,7 +11,7 @@ import (
 	"io"
 	"strconv"
 
-	"github.com/go-json-experiment/json/internal/jsonwire"
+	"github.com/metacubex/jsonv2/internal/jsonwire"
 )
 
 const errorPrefix = "jsontext: "

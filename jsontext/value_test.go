@@ -11,8 +11,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/go-json-experiment/json/internal/jsontest"
-	"github.com/go-json-experiment/json/internal/jsonwire"
+	"github.com/metacubex/jsonv2/internal/jsontest"
+	"github.com/metacubex/jsonv2/internal/jsonwire"
 )
 
 type valueTestdataEntry struct {

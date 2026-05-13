@@ -9,12 +9,12 @@ package jsontext
 import (
 	"bytes"
 	"errors"
-	slices "github.com/go-json-experiment/json/internal/go120/slices"
+	slices "github.com/metacubex/jsonv2/internal/go120/slices"
 	"io"
 	"math/rand"
 	"testing"
 
-	"github.com/go-json-experiment/json/internal/jsontest"
+	"github.com/metacubex/jsonv2/internal/jsontest"
 )
 
 func FuzzCoder(f *testing.F) {

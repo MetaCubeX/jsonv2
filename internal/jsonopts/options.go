@@ -7,8 +7,8 @@
 package jsonopts
 
 import (
-	"github.com/go-json-experiment/json/internal"
-	"github.com/go-json-experiment/json/internal/jsonflags"
+	"github.com/metacubex/jsonv2/internal"
+	"github.com/metacubex/jsonv2/internal/jsonflags"
 )
 
 // Options is the common options type shared across json packages.

@@ -9,14 +9,14 @@ package jsontext
 import (
 	"bytes"
 	"errors"
-	slices "github.com/go-json-experiment/json/internal/go120/slices"
+	slices "github.com/metacubex/jsonv2/internal/go120/slices"
 	"io"
 	"path"
 	"testing"
 
-	"github.com/go-json-experiment/json/internal/jsonflags"
-	"github.com/go-json-experiment/json/internal/jsontest"
-	"github.com/go-json-experiment/json/internal/jsonwire"
+	"github.com/metacubex/jsonv2/internal/jsonflags"
+	"github.com/metacubex/jsonv2/internal/jsontest"
+	"github.com/metacubex/jsonv2/internal/jsonwire"
 )
 
 // TestEncoder tests whether we can produce JSON with either tokens or raw values.

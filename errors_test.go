@@ -14,8 +14,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/go-json-experiment/json/internal/jsonwire"
-	"github.com/go-json-experiment/json/jsontext"
+	"github.com/metacubex/jsonv2/internal/jsonwire"
+	"github.com/metacubex/jsonv2/jsontext"
 )
 
 func TestSemanticError(t *testing.T) {
@@ -51,7 +51,7 @@ func TestSemanticError(t *testing.T) {
 		want: `json: cannot handle Go struct`,
 	}, {
 		err:  &SemanticError{GoType: T[struct{ Alpha, Bravo, Charlie, Delta, Echo, Foxtrot, Golf, Hotel, x string }]()},
-		want: `json: cannot handle Go json.struct`,
+		want: `json: cannot handle Go jsonv2.struct`,
 	}, {
 		err:  &SemanticError{JSONKind: '0', GoType: T[tar.Header]()},
 		want: `json: cannot handle JSON number with Go tar.Header`,

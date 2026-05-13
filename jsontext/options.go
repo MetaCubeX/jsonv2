@@ -9,9 +9,9 @@ package jsontext
 import (
 	"strings"
 
-	"github.com/go-json-experiment/json/internal/jsonflags"
-	"github.com/go-json-experiment/json/internal/jsonopts"
-	"github.com/go-json-experiment/json/internal/jsonwire"
+	"github.com/metacubex/jsonv2/internal/jsonflags"
+	"github.com/metacubex/jsonv2/internal/jsonopts"
+	"github.com/metacubex/jsonv2/internal/jsonwire"
 )
 
 // Options configures [NewEncoder], [Encoder.Reset], [NewDecoder],

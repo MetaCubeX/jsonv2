@@ -8,7 +8,7 @@ package jsontext
 
 import (
 	"fmt"
-	slices "github.com/go-json-experiment/json/internal/go120/slices"
+	slices "github.com/metacubex/jsonv2/internal/go120/slices"
 	"strings"
 	"testing"
 	"unicode/utf8"

@@ -12,9 +12,9 @@ import (
 	"strconv"
 	"strings"
 
-	jsonv2 "github.com/go-json-experiment/json"
-	"github.com/go-json-experiment/json/internal"
-	"github.com/go-json-experiment/json/jsontext"
+	jsonv2 "github.com/metacubex/jsonv2"
+	"github.com/metacubex/jsonv2/internal"
+	"github.com/metacubex/jsonv2/jsontext"
 )
 
 // Inject functionality into v2 to properly handle v1 types.

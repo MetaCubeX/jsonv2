@@ -7,8 +7,8 @@
 package jsonwire
 
 import (
-	cmp "github.com/go-json-experiment/json/internal/go120/cmp"
-	slices "github.com/go-json-experiment/json/internal/go120/slices"
+	cmp "github.com/metacubex/jsonv2/internal/go120/cmp"
+	slices "github.com/metacubex/jsonv2/internal/go120/slices"
 	"testing"
 	"unicode/utf16"
 	"unicode/utf8"

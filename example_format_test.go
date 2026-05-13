@@ -12,8 +12,8 @@ import (
 	"math"
 	"time"
 
-	"github.com/go-json-experiment/json"
-	"github.com/go-json-experiment/json/jsontext"
+	"github.com/metacubex/jsonv2"
+	"github.com/metacubex/jsonv2/jsontext"
 )
 
 // The "format" tag option can be used to alter the formatting of certain types.

@@ -10,7 +10,7 @@ package jsonwire
 import (
 	"bytes"
 	"errors"
-	cmp "github.com/go-json-experiment/json/internal/go120/cmp"
+	cmp "github.com/metacubex/jsonv2/internal/go120/cmp"
 	"strconv"
 	"strings"
 	"unicode"

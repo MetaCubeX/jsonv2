@@ -7,8 +7,8 @@
 package jsontext
 
 import (
-	"github.com/go-json-experiment/json/internal/jsonflags"
-	"github.com/go-json-experiment/json/internal/jsonwire"
+	"github.com/metacubex/jsonv2/internal/jsonflags"
+	"github.com/metacubex/jsonv2/internal/jsonwire"
 )
 
 // AppendQuote appends a double-quoted JSON string literal representing src

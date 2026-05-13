@@ -19,8 +19,8 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/go-json-experiment/json"
-	"github.com/go-json-experiment/json/jsontext"
+	"github.com/metacubex/jsonv2"
+	"github.com/metacubex/jsonv2/jsontext"
 )
 
 // If a type implements [encoding.TextMarshaler] and/or [encoding.TextUnmarshaler],

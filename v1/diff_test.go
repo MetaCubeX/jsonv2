@@ -14,9 +14,9 @@ import (
 	"testing"
 	"time"
 
-	jsonv2 "github.com/go-json-experiment/json"
-	"github.com/go-json-experiment/json/jsontext"
-	jsonv1 "github.com/go-json-experiment/json/v1"
+	jsonv2 "github.com/metacubex/jsonv2"
+	"github.com/metacubex/jsonv2/jsontext"
+	jsonv1 "github.com/metacubex/jsonv2/v1"
 )
 
 // NOTE: This file serves as a list of semantic differences between v1 and v2.

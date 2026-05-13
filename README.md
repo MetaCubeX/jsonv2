@@ -1,7 +1,7 @@
 # JSON Serialization (v2)
 
-[![GoDev](https://img.shields.io/static/v1?label=godev&message=reference&color=00add8)](https://pkg.go.dev/github.com/go-json-experiment/json)
-[![Build Status](https://github.com/go-json-experiment/json/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/go-json-experiment/json/actions)
+[![GoDev](https://img.shields.io/static/v1?label=godev&message=reference&color=00add8)](https://pkg.go.dev/github.com/metacubex/jsonv2)
+[![Build Status](https://github.com/metacubex/jsonv2/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/metacubex/jsonv2/actions)
 
 This module hosts an experimental implementation of v2 `encoding/json`.
 The API is unstable and breaking changes will regularly be made.
@@ -172,5 +172,5 @@ but not at the expense of correctness.
 In general, v2 is at performance parity with v1 for marshaling,
 but dramatically faster for unmarshaling.
 
-See https://github.com/go-json-experiment/jsonbench for benchmarks
+See https://github.com/metacubex/jsonv2bench for benchmarks
 comparing v2 with v1 and a number of other popular JSON implementations.

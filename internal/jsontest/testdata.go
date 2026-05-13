@@ -11,14 +11,14 @@ import (
 	"bytes"
 	"embed"
 	"errors"
-	slices "github.com/go-json-experiment/json/internal/go120/slices"
+	slices "github.com/metacubex/jsonv2/internal/go120/slices"
 	"io"
 	"io/fs"
 	"path"
 	"strings"
 	"time"
 
-	"github.com/go-json-experiment/json/internal/zstd"
+	"github.com/metacubex/jsonv2/internal/zstd"
 )
 
 // Embed the testdata directory as a fs.FS because this package is imported

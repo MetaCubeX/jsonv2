@@ -1,6 +1,6 @@
 package maps
 
-import "github.com/go-json-experiment/json/internal/go120/iter"
+import "github.com/metacubex/jsonv2/internal/go120/iter"
 
 func All[Map ~map[K]V, K comparable, V any](m Map) iter.Seq2[K, V] {
 	return func(yield func(K, V) bool) {

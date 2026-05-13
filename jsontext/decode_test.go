@@ -10,7 +10,7 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	slices "github.com/go-json-experiment/json/internal/go120/slices"
+	slices "github.com/metacubex/jsonv2/internal/go120/slices"
 	"io"
 	"net"
 	"path"
@@ -19,9 +19,9 @@ import (
 	"testing"
 	"testing/iotest"
 
-	"github.com/go-json-experiment/json/internal/jsonflags"
-	"github.com/go-json-experiment/json/internal/jsontest"
-	"github.com/go-json-experiment/json/internal/jsonwire"
+	"github.com/metacubex/jsonv2/internal/jsonflags"
+	"github.com/metacubex/jsonv2/internal/jsontest"
+	"github.com/metacubex/jsonv2/internal/jsonwire"
 )
 
 // equalTokens reports whether to sequences of tokens formats the same way.

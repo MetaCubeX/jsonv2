@@ -11,14 +11,14 @@ package json
 
 import (
 	"fmt"
-	cmp "github.com/go-json-experiment/json/internal/go120/cmp"
+	cmp "github.com/metacubex/jsonv2/internal/go120/cmp"
 	"reflect"
 	"strconv"
 	"strings"
 
-	jsonv2 "github.com/go-json-experiment/json"
-	"github.com/go-json-experiment/json/internal/jsonwire"
-	"github.com/go-json-experiment/json/jsontext"
+	jsonv2 "github.com/metacubex/jsonv2"
+	"github.com/metacubex/jsonv2/internal/jsonwire"
+	"github.com/metacubex/jsonv2/jsontext"
 )
 
 // Unmarshal parses the JSON-encoded data and stores the result
