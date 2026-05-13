@@ -8,7 +8,7 @@ package jsontext
 
 import (
 	"errors"
-	"iter"
+	iter "github.com/go-json-experiment/json/internal/go120/iter"
 	"math"
 	"strconv"
 	"strings"
@@ -119,13 +119,21 @@ func (p Pointer) Contains(pc Pointer) bool {
 // Parent strips off the last token and returns the remaining pointer.
 // The parent of an empty p is an empty string.
 func (p Pointer) Parent() Pointer {
-	return p[:max(strings.LastIndexByte(string(p), '/'), 0)]
+	i := strings.LastIndexByte(string(p), '/')
+	if i < 0 {
+		i = 0
+	}
+	return p[:i]
 }
 
 // LastToken returns the last token in the pointer.
 // The last token of an empty p is an empty string.
 func (p Pointer) LastToken() string {
-	last := p[max(strings.LastIndexByte(string(p), '/'), 0):]
+	i := strings.LastIndexByte(string(p), '/')
+	if i < 0 {
+		i = 0
+	}
+	last := p[i:]
 	return unescapePointerToken(strings.TrimPrefix(string(last), "/"))
 }
 
@@ -143,7 +151,10 @@ func (p Pointer) Tokens() iter.Seq[string] {
 	return func(yield func(string) bool) {
 		for len(p) > 0 {
 			p = Pointer(strings.TrimPrefix(string(p), "/"))
-			i := min(uint(strings.IndexByte(string(p), '/')), uint(len(p)))
+			i := strings.IndexByte(string(p), '/')
+			if i < 0 {
+				i = len(p)
+			}
 			if !yield(unescapePointerToken(string(p)[:i])) {
 				return
 			}
@@ -419,7 +430,7 @@ func (m stateMachine) needDelim(next Kind) (delim byte) {
 // Mark the namespaces as invalid so that future method calls on
 // Encoder or Decoder will return an error.
 func (m *stateMachine) InvalidateDisabledNamespaces() {
-	for i := range m.Depth() {
+	for i := 0; i < m.Depth(); i++ {
 		e := m.index(i)
 		if !e.isActiveNamespace() {
 			e.invalidateNamespace()

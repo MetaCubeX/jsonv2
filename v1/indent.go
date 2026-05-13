@@ -20,7 +20,7 @@ import (
 // escaping within <script> tags, so an alternative JSON encoding must be used.
 func HTMLEscape(dst *bytes.Buffer, src []byte) {
 	dst.Grow(len(src))
-	dst.Write(appendHTMLEscape(dst.AvailableBuffer(), src))
+	dst.Write(appendHTMLEscape(make([]byte, 0, len(src)), src))
 }
 
 func appendHTMLEscape(dst, src []byte) []byte {
@@ -48,7 +48,7 @@ func appendHTMLEscape(dst, src []byte) []byte {
 // insignificant space characters elided.
 func Compact(dst *bytes.Buffer, src []byte) error {
 	dst.Grow(len(src))
-	b := dst.AvailableBuffer()
+	b := make([]byte, 0, len(src))
 	b, err := jsontext.AppendFormat(b, src,
 		ReportErrorsWithLegacySemantics(true),
 		jsontext.AllowDuplicateNames(true),
@@ -82,7 +82,7 @@ const indentGrowthFactor = 2
 // if src ends in a trailing newline, so will dst.
 func Indent(dst *bytes.Buffer, src []byte, prefix, indent string) error {
 	dst.Grow(indentGrowthFactor * len(src))
-	b := dst.AvailableBuffer()
+	b := make([]byte, 0, indentGrowthFactor*len(src))
 	b, err := appendIndent(b, src, prefix, indent)
 	dst.Write(b)
 	return err

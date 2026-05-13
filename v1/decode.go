@@ -10,8 +10,8 @@
 package json
 
 import (
-	"cmp"
 	"fmt"
+	cmp "github.com/go-json-experiment/json/internal/go120/cmp"
 	"reflect"
 	"strconv"
 	"strings"
@@ -206,7 +206,7 @@ func (n Number) Int64() (int64, error) {
 	return strconv.ParseInt(string(n), 10, 64)
 }
 
-var numberType = reflect.TypeFor[Number]()
+var numberType = typeFor[Number]()
 
 // MarshalJSONTo implements [jsonv2.MarshalerTo].
 func (n Number) MarshalJSONTo(enc *jsontext.Encoder) error {

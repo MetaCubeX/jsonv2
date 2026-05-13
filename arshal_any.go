@@ -7,11 +7,11 @@
 package json
 
 import (
-	"cmp"
 	"errors"
+	cmp "github.com/go-json-experiment/json/internal/go120/cmp"
+	slices "github.com/go-json-experiment/json/internal/go120/slices"
 	"math"
 	"reflect"
-	"slices"
 	"strconv"
 
 	"github.com/go-json-experiment/json/internal"

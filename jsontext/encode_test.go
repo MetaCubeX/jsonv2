@@ -9,9 +9,9 @@ package jsontext
 import (
 	"bytes"
 	"errors"
+	slices "github.com/go-json-experiment/json/internal/go120/slices"
 	"io"
 	"path"
-	"slices"
 	"testing"
 
 	"github.com/go-json-experiment/json/internal/jsonflags"
@@ -790,40 +790,14 @@ func TestEncoderReset(t *testing.T) {
 		}
 	})
 
-	t.Run("Test aliasing with bytes.Buffer", func(t *testing.T) {
-		// Test with bytes.Buffer to verify proper aliasing behavior.
+	t.Run("Test bytes.Buffer writer", func(t *testing.T) {
 		bb.Reset()
 		enc.Reset(bb)
-
-		// Write the third JSON value to ensure functionality with bytes.Buffer.
-		err := enc.WriteValue([]byte(largeJSON))
-		if err != nil {
+		if err := enc.WriteValue([]byte(largeJSON)); err != nil {
 			t.Fatalf("fourth WriteValue failed: %v", err)
 		}
 		if bb.String() != largeJSON {
 			t.Fatalf("fourth WriteValue = %q, want %q", bb.String(), largeJSON)
-		}
-		// The encoder buffer should alias bytes.Buffer's internal buffer.
-		if cap(enc.s.Buf) == 0 || cap(bb.AvailableBuffer()) == 0 || &enc.s.Buf[:1][0] != &bb.AvailableBuffer()[:1][0] {
-			t.Fatalf("encoder buffer does not alias bytes.Buffer")
-		}
-	})
-
-	t.Run("Test aliasing removed after Reset", func(t *testing.T) {
-		// Reset with a new reader and verify the buffer is not aliased.
-		bb.Reset()
-		enc.Reset(struct{ io.Writer }{bb})
-		err := enc.WriteValue([]byte(largeJSON))
-		if err != nil {
-			t.Fatalf("fifth WriteValue failed: %v", err)
-		}
-		if bb.String() != largeJSON {
-			t.Fatalf("fourth WriteValue = %q, want %q", bb.String(), largeJSON)
-		}
-
-		// The encoder buffer should not alias the bytes.Buffer's internal buffer.
-		if cap(enc.s.Buf) == 0 || cap(bb.AvailableBuffer()) == 0 || &enc.s.Buf[:1][0] == &bb.AvailableBuffer()[:1][0] {
-			t.Fatalf("encoder buffer aliases bytes.Buffer")
 		}
 	})
 }

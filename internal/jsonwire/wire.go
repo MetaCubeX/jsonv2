@@ -8,8 +8,8 @@
 package jsonwire
 
 import (
-	"cmp"
 	"errors"
+	cmp "github.com/go-json-experiment/json/internal/go120/cmp"
 	"strconv"
 	"strings"
 	"unicode"
@@ -146,9 +146,9 @@ type InvalidTextError struct {
 
 func (e *InvalidTextError) Error() string {
 	var what string
-	needEscape := strings.ContainsFunc(e.What, func(r rune) bool {
+	needEscape := strings.IndexFunc(e.What, func(r rune) bool {
 		return r == '`' || r == utf8.RuneError || unicode.IsSpace(r) || !unicode.IsPrint(r)
-	})
+	}) >= 0
 	switch {
 	case utf8.RuneCount([]byte(e.What)) == 1:
 		what = QuoteRune([]byte(e.What))

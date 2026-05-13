@@ -7,9 +7,9 @@
 package jsonwire
 
 import (
+	slices "github.com/go-json-experiment/json/internal/go120/slices"
 	"io"
 	"math"
-	"slices"
 	"strconv"
 	"unicode/utf16"
 	"unicode/utf8"
@@ -388,7 +388,7 @@ func AppendUnquote(dst, src []byte) (v []byte, err error) {
 // hasEscapedUTF16Prefix reports whether b is possibly
 // the truncated prefix of a \uFFFF escape sequence.
 func hasEscapedUTF16Prefix(b []byte, lowerSurrogateHalf bool) bool {
-	for i := range len(b) {
+	for i := 0; i < len(b); i++ {
 		switch c := b[i]; {
 		case i == 0 && c != '\\':
 			return false
@@ -569,7 +569,7 @@ func parseHexUint16(b []byte) (v uint16, ok bool) {
 	if len(b) != 4 {
 		return 0, false
 	}
-	for i := range 4 {
+	for i := 0; i < 4; i++ {
 		c := b[i]
 		switch {
 		case '0' <= c && c <= '9':

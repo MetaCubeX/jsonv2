@@ -208,7 +208,7 @@ func BenchmarkAppendFormat(b *testing.B) {
 	var err error
 	b.Run("FromString", func(b *testing.B) {
 		b.ReportAllocs()
-		for b.Loop() {
+		for i := 0; i < b.N; i++ {
 			if output, err = AppendFormat(output[:0], inputString); err != nil {
 				b.Fatalf("AppendFormat error: %v", err)
 			}
@@ -219,7 +219,7 @@ func BenchmarkAppendFormat(b *testing.B) {
 	})
 	b.Run("FromBytes", func(b *testing.B) {
 		b.ReportAllocs()
-		for b.Loop() {
+		for i := 0; i < b.N; i++ {
 			if output, err = AppendFormat(output[:0], inputBytes); err != nil {
 				b.Fatalf("AppendFormat error: %v", err)
 			}

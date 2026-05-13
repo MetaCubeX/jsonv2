@@ -9,9 +9,9 @@ package jsontext
 import (
 	"bytes"
 	"errors"
+	slices "github.com/go-json-experiment/json/internal/go120/slices"
 	"io"
 	"math/rand"
-	"slices"
 	"testing"
 
 	"github.com/go-json-experiment/json/internal/jsontest"
@@ -54,7 +54,8 @@ func FuzzCoder(f *testing.F) {
 				val, err := dec.ReadValue()
 				if err != nil {
 					if expectError := dec.PeekKind() == '}' || dec.PeekKind() == ']'; expectError {
-						if _, ok := errors.AsType[*SyntacticError](err); ok {
+						var serr *SyntacticError
+						if errors.As(err, &serr) {
 							continue
 						}
 					}

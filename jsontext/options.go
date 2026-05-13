@@ -286,7 +286,10 @@ func WithIndentPrefix(prefix string) Options {
 // If unspecified, the default limit is no limit at all.
 // This affects either encoding or decoding.
 func WithByteLimit(n int64) Options {
-	return jsonopts.ByteLimit(max(n, 0))
+	if n < 0 {
+		n = 0
+	}
+	return jsonopts.ByteLimit(n)
 }
 
 // WithDepthLimit sets a limit on the maximum depth of JSON nesting
@@ -299,6 +302,9 @@ func WithByteLimit(n int64) Options {
 // If unspecified, the default limit is 10000.
 // This affects either encoding or decoding.
 func WithDepthLimit(n int) Options {
-	return jsonopts.DepthLimit(max(n, 0))
+	if n < 0 {
+		n = 0
+	}
+	return jsonopts.DepthLimit(n)
 }
 */

@@ -7,12 +7,12 @@
 package json
 
 import (
-	"cmp"
 	"errors"
 	"fmt"
+	cmp "github.com/go-json-experiment/json/internal/go120/cmp"
+	slices "github.com/go-json-experiment/json/internal/go120/slices"
 	"io"
 	"reflect"
-	"slices"
 	"strconv"
 	"strings"
 	"unicode"
@@ -26,7 +26,7 @@ type isZeroer interface {
 	IsZero() bool
 }
 
-var isZeroerType = reflect.TypeFor[isZeroer]()
+var isZeroerType = typeFor[isZeroer]()
 
 type structFields struct {
 	flattened        []structField // listed in depth-first ordering
@@ -104,7 +104,7 @@ func makeStructFields(root reflect.Type) (fs structFields, serr *SemanticError) 
 		namesIndex := make(map[string]int) // index of each field with a given JSON object name in current struct
 		var hasAnyJSONTag bool             // whether any Go struct field has a `json` tag
 		var hasAnyJSONField bool           // whether any JSON serializable fields exist in current struct
-		for i := range t.NumField() {
+		for i := 0; i < t.NumField(); i++ {
 			sf := t.Field(i)
 			_, hasTag := sf.Tag.Lookup("json")
 			hasAnyJSONTag = hasAnyJSONTag || hasTag

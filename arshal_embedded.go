@@ -9,9 +9,9 @@ package json
 import (
 	"bytes"
 	"errors"
+	slices "github.com/go-json-experiment/json/internal/go120/slices"
 	"io"
 	"reflect"
-	"slices"
 
 	"github.com/go-json-experiment/json/internal/jsonflags"
 	"github.com/go-json-experiment/json/internal/jsonopts"
@@ -34,7 +34,7 @@ import (
 
 var errRawEmbedNotObject = errors.New("embedded raw value must be a JSON object")
 
-var jsontextValueType = reflect.TypeFor[jsontext.Value]()
+var jsontextValueType = typeFor[jsontext.Value]()
 
 // marshalEmbeddedFallbackAll marshals all the members in an embedded fallback.
 func marshalEmbeddedFallbackAll(enc *jsontext.Encoder, va addressableValue, mo *jsonopts.Struct, f *structField, insertUnquotedName func([]byte) bool) error {
@@ -51,7 +51,7 @@ func marshalEmbeddedFallbackAll(enc *jsontext.Encoder, va addressableValue, mo *
 	}
 
 	if v.Type() == jsontextValueType {
-		b, _ := reflect.TypeAssert[jsontext.Value](v.Value)
+		b := v.Value.Interface().(jsontext.Value)
 		if len(b) == 0 { // TODO: Should this be nil? What if it were all whitespace?
 			return nil
 		}
@@ -174,7 +174,7 @@ func unmarshalEmbeddedFallbackNext(dec *jsontext.Decoder, va addressableValue, u
 	v = v.indirect(true)
 
 	if v.Type() == jsontextValueType {
-		b, _ := reflect.TypeAssert[*jsontext.Value](v.Addr())
+		b := v.Addr().Interface().(*jsontext.Value)
 		if len(*b) == 0 { // TODO: Should this be nil? What if it were all whitespace?
 			*b = append(*b, '{')
 		} else {

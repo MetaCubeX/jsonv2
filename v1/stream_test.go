@@ -537,7 +537,7 @@ func TestTokenError(t *testing.T) {
 		{in: `nul`, err: io.ErrUnexpectedEOF},
 		{in: `fal `, err: &SyntaxError{"invalid character ' ' in literal false (expecting 's')", len64(`fal `)}},
 		{in: `false`, err: io.EOF},
-		{in: `  1e1000`, err: &UnmarshalTypeError{Value: "number 1e1000", Type: reflect.TypeFor[float64](), Offset: len64(`  1e1000`)}},
+		{in: `  1e1000`, err: &UnmarshalTypeError{Value: "number 1e1000", Type: typeFor[float64](), Offset: len64(`  1e1000`)}},
 	}
 	for _, tt := range tests {
 		d := NewDecoder(strings.NewReader(tt.in))

@@ -22,16 +22,16 @@ package main
 
 import (
 	"bytes"
-	"cmp"
 	"fmt"
+	cmp "github.com/go-json-experiment/json/internal/go120/cmp"
+	maps "github.com/go-json-experiment/json/internal/go120/maps"
+	slices "github.com/go-json-experiment/json/internal/go120/slices"
 	"go/ast"
 	"go/format"
 	"go/parser"
 	"go/token"
-	"maps"
 	"os"
 	"path/filepath"
-	"slices"
 	"strconv"
 	"strings"
 )
@@ -285,7 +285,10 @@ func mustGet[T any](v T, err error) T {
 }
 
 func writeComments(out *bytes.Buffer, comments *ast.CommentGroup) {
-	for line := range strings.Lines(comments.Text()) {
+	for _, line := range strings.SplitAfter(comments.Text(), "\n") {
+		if line == "" {
+			continue
+		}
 		out.WriteString("// ")
 		out.WriteString(line)
 	}

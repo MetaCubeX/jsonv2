@@ -7,8 +7,8 @@
 package jsonwire
 
 import (
+	slices "github.com/go-json-experiment/json/internal/go120/slices"
 	"math"
-	"slices"
 	"strconv"
 	"unicode/utf16"
 	"unicode/utf8"

@@ -233,7 +233,7 @@ func TestMakeStructFields(t *testing.T) {
 		}{},
 		want: structFields{embeddedFallback: &structField{
 			index: []int{0},
-			typ:   reflect.TypeFor[map[string]any](),
+			typ:   typeFor[map[string]any](),
 			fieldOptions: fieldOptions{
 				name:       "A",
 				quotedName: `"A"`,
@@ -248,7 +248,7 @@ func TestMakeStructFields(t *testing.T) {
 		}{},
 		want: structFields{flattened: []structField{{
 			index: []int{0, 0},
-			typ:   reflect.TypeFor[encoding.TextMarshaler](),
+			typ:   typeFor[encoding.TextMarshaler](),
 			fieldOptions: fieldOptions{
 				name:       "TextMarshaler",
 				quotedName: `"TextMarshaler"`,
@@ -258,17 +258,17 @@ func TestMakeStructFields(t *testing.T) {
 	}, {
 		name: jsontest.Name("EmbedTextAppender"),
 		in: struct {
-			A struct{ encoding.TextAppender } `json:",embed"`
+			A struct{ TextAppender } `json:",embed"`
 		}{},
 		want: structFields{flattened: []structField{{
 			index: []int{0, 0},
-			typ:   reflect.TypeFor[encoding.TextAppender](),
+			typ:   typeFor[TextAppender](),
 			fieldOptions: fieldOptions{
 				name:       "TextAppender",
 				quotedName: `"TextAppender"`,
 			},
 		}}},
-		wantErr: errors.New(`embedded Go struct field A of type struct { encoding.TextAppender } must not implement marshal or unmarshal methods`),
+		wantErr: errors.New(`embedded Go struct field A of type struct { json.TextAppender } must not implement marshal or unmarshal methods`),
 	}, {
 		name: jsontest.Name("EmbedJSONMarshaler"),
 		in: struct {
@@ -276,7 +276,7 @@ func TestMakeStructFields(t *testing.T) {
 		}{},
 		want: structFields{flattened: []structField{{
 			index: []int{0, 0},
-			typ:   reflect.TypeFor[Marshaler](),
+			typ:   typeFor[Marshaler](),
 			fieldOptions: fieldOptions{
 				name:       "Marshaler",
 				quotedName: `"Marshaler"`,
@@ -290,7 +290,7 @@ func TestMakeStructFields(t *testing.T) {
 		}{},
 		want: structFields{flattened: []structField{{
 			index: []int{0, 0},
-			typ:   reflect.TypeFor[MarshalerTo](),
+			typ:   typeFor[MarshalerTo](),
 			fieldOptions: fieldOptions{
 				name:       "MarshalerTo",
 				quotedName: `"MarshalerTo"`,
@@ -304,7 +304,7 @@ func TestMakeStructFields(t *testing.T) {
 		}{},
 		want: structFields{flattened: []structField{{
 			index: []int{0, 0},
-			typ:   reflect.TypeFor[encoding.TextUnmarshaler](),
+			typ:   typeFor[encoding.TextUnmarshaler](),
 			fieldOptions: fieldOptions{
 				name:       "TextUnmarshaler",
 				quotedName: `"TextUnmarshaler"`,
@@ -318,7 +318,7 @@ func TestMakeStructFields(t *testing.T) {
 		}{},
 		want: structFields{flattened: []structField{{
 			index: []int{0, 0},
-			typ:   reflect.TypeFor[Unmarshaler](),
+			typ:   typeFor[Unmarshaler](),
 			fieldOptions: fieldOptions{
 				name:       "Unmarshaler",
 				quotedName: `"Unmarshaler"`,
@@ -332,7 +332,7 @@ func TestMakeStructFields(t *testing.T) {
 		}{},
 		want: structFields{flattened: []structField{{
 			index: []int{0, 0},
-			typ:   reflect.TypeFor[UnmarshalerFrom](),
+			typ:   typeFor[UnmarshalerFrom](),
 			fieldOptions: fieldOptions{
 				name:       "UnmarshalerFrom",
 				quotedName: `"UnmarshalerFrom"`,
@@ -346,7 +346,7 @@ func TestMakeStructFields(t *testing.T) {
 		}{},
 		want: structFields{flattened: []structField{{
 			index:        []int{0},
-			typ:          reflect.TypeFor[map[int]any](),
+			typ:          typeFor[map[int]any](),
 			fieldOptions: fieldOptions{name: "A", quotedName: `"A"`, embed: true},
 		}}},
 		wantErr: errors.New(`embedded Go struct field A of type map[int]interface {} must be a Go struct, Go map of string key, or jsontext.Value`),
@@ -357,7 +357,7 @@ func TestMakeStructFields(t *testing.T) {
 		}{},
 		want: structFields{flattened: []structField{{
 			index:        []int{0},
-			typ:          reflect.TypeFor[map[nocaseString]any](),
+			typ:          typeFor[map[nocaseString]any](),
 			fieldOptions: fieldOptions{name: "A", quotedName: `"A"`, embed: true},
 		}}},
 		wantErr: errors.New(`embedded map field A of type map[json.nocaseString]interface {} must have a string key that does not implement marshal or unmarshal methods`),
@@ -368,7 +368,7 @@ func TestMakeStructFields(t *testing.T) {
 		}{},
 		want: structFields{flattened: []structField{{
 			index:        []int{0},
-			typ:          reflect.TypeFor[map[stringMarshalEmpty]any](),
+			typ:          typeFor[map[stringMarshalEmpty]any](),
 			fieldOptions: fieldOptions{name: "A", quotedName: `"A"`, embed: true},
 		}}},
 		wantErr: errors.New(`embedded map field A of type map[json.stringMarshalEmpty]interface {} must have a string key that does not implement marshal or unmarshal methods`),
@@ -379,7 +379,7 @@ func TestMakeStructFields(t *testing.T) {
 		}{},
 		want: structFields{flattened: []structField{{
 			index:        []int{0},
-			typ:          reflect.TypeFor[**struct{}](),
+			typ:          typeFor[**struct{}](),
 			fieldOptions: fieldOptions{name: "A", quotedName: `"A"`, embed: true},
 		}}},
 		wantErr: errors.New(`embedded Go struct field A of type *struct {} must be a Go struct, Go map of string key, or jsontext.Value`),

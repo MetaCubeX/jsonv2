@@ -199,7 +199,7 @@ var sink struct {
 func BenchmarkGetBool(b *testing.B) {
 	b.ReportAllocs()
 	opts := json.DefaultOptionsV2()
-	for range b.N {
+	for i := 0; i < b.N; i++ {
 		sink.Bool, sink.Bool = json.GetOption(opts, jsontext.AllowDuplicateNames)
 	}
 }
@@ -207,7 +207,7 @@ func BenchmarkGetBool(b *testing.B) {
 func BenchmarkGetIndent(b *testing.B) {
 	b.ReportAllocs()
 	opts := json.DefaultOptionsV2()
-	for range b.N {
+	for i := 0; i < b.N; i++ {
 		sink.String, sink.Bool = json.GetOption(opts, jsontext.WithIndent)
 	}
 }
@@ -215,7 +215,7 @@ func BenchmarkGetIndent(b *testing.B) {
 func BenchmarkGetMarshalers(b *testing.B) {
 	b.ReportAllocs()
 	opts := json.JoinOptions(json.DefaultOptionsV2(), json.WithMarshalers(nil))
-	for range b.N {
+	for i := 0; i < b.N; i++ {
 		sink.Marshalers, sink.Bool = json.GetOption(opts, json.WithMarshalers)
 	}
 }

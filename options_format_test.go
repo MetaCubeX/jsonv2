@@ -100,13 +100,13 @@ func BenchmarkGlobalExperimentalFormatSupport(b *testing.B) {
 			jsonVal := []byte(`false`)
 			b.Run("Marshal", func(b *testing.B) {
 				b.ReportAllocs()
-				for b.Loop() {
+				for i := 0; i < b.N; i++ {
 					jsonVal, _ = Marshal(boolVal)
 				}
 			})
 			b.Run("Unmarshal", func(b *testing.B) {
 				b.ReportAllocs()
-				for b.Loop() {
+				for i := 0; i < b.N; i++ {
 					Unmarshal(jsonVal, boolVal)
 				}
 			})

@@ -23,13 +23,13 @@ var errNonStringValue = errors.New("JSON value must be string type")
 
 // Interfaces for custom serialization.
 var (
-	jsonMarshalerType       = reflect.TypeFor[Marshaler]()
-	jsonMarshalerToType     = reflect.TypeFor[MarshalerTo]()
-	jsonUnmarshalerType     = reflect.TypeFor[Unmarshaler]()
-	jsonUnmarshalerFromType = reflect.TypeFor[UnmarshalerFrom]()
-	textAppenderType        = reflect.TypeFor[encoding.TextAppender]()
-	textMarshalerType       = reflect.TypeFor[encoding.TextMarshaler]()
-	textUnmarshalerType     = reflect.TypeFor[encoding.TextUnmarshaler]()
+	jsonMarshalerType       = typeFor[Marshaler]()
+	jsonMarshalerToType     = typeFor[MarshalerTo]()
+	jsonUnmarshalerType     = typeFor[Unmarshaler]()
+	jsonUnmarshalerFromType = typeFor[UnmarshalerFrom]()
+	textAppenderType        = typeFor[TextAppender]()
+	textMarshalerType       = typeFor[encoding.TextMarshaler]()
+	textUnmarshalerType     = typeFor[encoding.TextUnmarshaler]()
 
 	allMarshalerTypes   = []reflect.Type{jsonMarshalerToType, jsonMarshalerType, textAppenderType, textMarshalerType}
 	allUnmarshalerTypes = []reflect.Type{jsonUnmarshalerFromType, jsonUnmarshalerType, textUnmarshalerType}
@@ -58,7 +58,7 @@ type Marshaler interface {
 // should aim to have equivalent behavior for the default marshal options.
 //
 // The implementation must write only one JSON value to the Encoder.
-// Alternatively, it may return [errors.ErrUnsupported] without mutating
+// Alternatively, it may return [ErrUnsupported] without mutating
 // the Encoder. The "json" package calling the method will
 // use the next available JSON representation for the receiver type.
 // Implementations must not retain the pointer to [jsontext.Encoder].
@@ -104,7 +104,7 @@ type Unmarshaler interface {
 // The implementation must read only one JSON value from the Decoder.
 // It is recommended that UnmarshalJSONFrom implement merge semantics when
 // unmarshaling into a pre-populated value.
-// Alternatively, it may return [errors.ErrUnsupported] without mutating
+// Alternatively, it may return [ErrUnsupported] without mutating
 // the Decoder. The "json" package calling the method will
 // use the next available JSON representation for the receiver type.
 // Implementations must not retain the pointer to [jsontext.Decoder].
@@ -137,7 +137,7 @@ func makeMethodArshaler(fncs *arshaler, t reflect.Type) *arshaler {
 				(needAddr && va.forcedAddr) {
 				return prevMarshal(enc, va, mo)
 			}
-			marshaler, _ := reflect.TypeAssert[encoding.TextMarshaler](va.Addr())
+			marshaler := va.Addr().Interface().(encoding.TextMarshaler)
 			if err := export.Encoder(enc).AppendRaw('"', false, func(b []byte) ([]byte, error) {
 				b2, err := marshaler.MarshalText()
 				return append(b, b2...), err
@@ -163,7 +163,7 @@ func makeMethodArshaler(fncs *arshaler, t reflect.Type) *arshaler {
 				(needAddr && va.forcedAddr) {
 				return prevMarshal(enc, va, mo)
 			}
-			appender, _ := reflect.TypeAssert[encoding.TextAppender](va.Addr())
+			appender := va.Addr().Interface().(TextAppender)
 			if err := export.Encoder(enc).AppendRaw('"', false, appender.AppendText); err != nil {
 				err = wrapErrUnsupported(err, "AppendText method")
 				if mo.Flags.Get(jsonflags.ReportErrorsWithLegacySemantics) {
@@ -186,7 +186,7 @@ func makeMethodArshaler(fncs *arshaler, t reflect.Type) *arshaler {
 				((needAddr && va.forcedAddr) || export.Encoder(enc).Tokens.Last.NeedObjectName()) {
 				return prevMarshal(enc, va, mo)
 			}
-			marshaler, _ := reflect.TypeAssert[Marshaler](va.Addr())
+			marshaler := va.Addr().Interface().(Marshaler)
 			val, err := marshaler.MarshalJSON()
 			if err != nil {
 				err = wrapErrUnsupported(err, "MarshalJSON method")
@@ -220,7 +220,7 @@ func makeMethodArshaler(fncs *arshaler, t reflect.Type) *arshaler {
 			xe := export.Encoder(enc)
 			prevDepth, prevLength := xe.Tokens.DepthLength()
 			xe.Flags.Set(jsonflags.WithinArshalCall | 1)
-			marshaler, _ := reflect.TypeAssert[MarshalerTo](va.Addr())
+			marshaler := va.Addr().Interface().(MarshalerTo)
 			err := marshaler.MarshalJSONTo(enc)
 			xe.Flags.Set(jsonflags.WithinArshalCall | 0)
 			currDepth, currLength := xe.Tokens.DepthLength()
@@ -228,7 +228,7 @@ func makeMethodArshaler(fncs *arshaler, t reflect.Type) *arshaler {
 				err = errNonSingularValue
 			}
 			if err != nil {
-				if errors.Is(err, errors.ErrUnsupported) {
+				if errors.Is(err, ErrUnsupported) {
 					if prevDepth == currDepth && prevLength == currLength {
 						return prevMarshal(enc, va, mo)
 					}
@@ -265,7 +265,7 @@ func makeMethodArshaler(fncs *arshaler, t reflect.Type) *arshaler {
 				return newUnmarshalErrorAfter(dec, t, errNonStringValue)
 			}
 			s := jsonwire.UnquoteMayCopy(val, flags.IsVerbatim())
-			unmarshaler, _ := reflect.TypeAssert[encoding.TextUnmarshaler](va.Addr())
+			unmarshaler := va.Addr().Interface().(encoding.TextUnmarshaler)
 			if err := unmarshaler.UnmarshalText(s); err != nil {
 				err = wrapErrUnsupported(err, "UnmarshalText method")
 				if uo.Flags.Get(jsonflags.ReportErrorsWithLegacySemantics) {
@@ -292,7 +292,7 @@ func makeMethodArshaler(fncs *arshaler, t reflect.Type) *arshaler {
 			if err != nil {
 				return err // must be a syntactic or I/O error
 			}
-			unmarshaler, _ := reflect.TypeAssert[Unmarshaler](va.Addr())
+			unmarshaler := va.Addr().Interface().(Unmarshaler)
 			if err := unmarshaler.UnmarshalJSON(val); err != nil {
 				err = wrapErrUnsupported(err, "UnmarshalJSON method")
 				if uo.Flags.Get(jsonflags.ReportErrorsWithLegacySemantics) {
@@ -319,7 +319,7 @@ func makeMethodArshaler(fncs *arshaler, t reflect.Type) *arshaler {
 				return io.EOF // check EOF early to avoid fn reporting an EOF
 			}
 			xd.Flags.Set(jsonflags.WithinArshalCall | 1)
-			unmarshaler, _ := reflect.TypeAssert[UnmarshalerFrom](va.Addr())
+			unmarshaler := va.Addr().Interface().(UnmarshalerFrom)
 			err := unmarshaler.UnmarshalJSONFrom(dec)
 			xd.Flags.Set(jsonflags.WithinArshalCall | 0)
 			currDepth, currLength := xd.Tokens.DepthLength()
@@ -327,7 +327,7 @@ func makeMethodArshaler(fncs *arshaler, t reflect.Type) *arshaler {
 				err = errNonSingularValue
 			}
 			if err != nil {
-				if errors.Is(err, errors.ErrUnsupported) {
+				if errors.Is(err, ErrUnsupported) {
 					if prevDepth == currDepth && prevLength == currLength {
 						return prevUnmarshal(dec, va, uo)
 					}

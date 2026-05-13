@@ -7,14 +7,13 @@
 package json
 
 import (
-	"cmp"
 	"errors"
 	"fmt"
+	cmp "github.com/go-json-experiment/json/internal/go120/cmp"
 	"io"
 	"reflect"
 	"strconv"
 	"strings"
-	"sync"
 
 	"github.com/go-json-experiment/json/internal/jsonflags"
 	"github.com/go-json-experiment/json/internal/jsonopts"
@@ -270,11 +269,11 @@ func newSemanticErrorWithPosition(c coder, t reflect.Type, prevDepth int, prevLe
 //	collapseSemanticErrors(&SemanticError{
 //		ByteOffset:  len64(`[0,{"alpha":[0,1,`),
 //		JSONPointer: "/1/alpha/2",
-//		GoType:      reflect.TypeFor[outerType](),
+//		GoType:      typeFor[outerType](),
 //		Err: &SemanticError{
 //			ByteOffset:  len64(`{"foo":"bar","fizz":[0,`),
 //			JSONPointer: "/fizz/1",
-//			GoType:      reflect.TypeFor[innerType](),
+//			GoType:      typeFor[innerType](),
 //			Err:         ...,
 //		},
 //	})
@@ -284,7 +283,7 @@ func newSemanticErrorWithPosition(c coder, t reflect.Type, prevDepth int, prevLe
 //	&SemanticError{
 //		ByteOffset:  len64(`[0,{"alpha":[0,1,`) + len64(`{"foo":"bar","fizz":[0,`),
 //		JSONPointer: "/1/alpha/2" + "/fizz/1",
-//		GoType:      reflect.TypeFor[innerType](),
+//		GoType:      typeFor[innerType](),
 //		Err:         ...,
 //	}
 //
@@ -313,8 +312,8 @@ func collapseSemanticErrors(err error) error {
 }
 
 func wrapErrUnsupported(err error, what string) error {
-	if errors.Is(err, errors.ErrUnsupported) {
-		return errors.New(what + " may not return errors.ErrUnsupported")
+	if errors.Is(err, ErrUnsupported) {
+		return errors.New(what + " may not return ErrUnsupported")
 	}
 	return err
 }
@@ -325,7 +324,7 @@ func wrapErrUnsupported(err error, what string) error {
 // switching between equivalent renderings of the same error message.
 // The randomization is tied to the Hyrum-proofing already applied
 // on map iteration in Go.
-var errorModalVerb = sync.OnceValue(func() string {
+var errorModalVerb = onceValue(func() string {
 	for phrase := range map[string]struct{}{"cannot": {}, "unable to": {}} {
 		return phrase // use whichever phrase we get in the first iteration
 	}
@@ -386,7 +385,7 @@ func (e *SemanticError) Error() string {
 			// if the struct happens to include an unexported field.
 			typeString = e.GoType.Kind().String()
 			if e.GoType.Kind() == reflect.Struct && e.GoType.Name() == "" {
-				for i := range e.GoType.NumField() {
+				for i := 0; i < e.GoType.NumField(); i++ {
 					if pkgPath := e.GoType.Field(i).PkgPath; pkgPath != "" {
 						typeString = pkgPath[strings.LastIndexByte(pkgPath, '/')+len("/"):] + ".struct"
 						break
