@@ -23,9 +23,9 @@ package main
 import (
 	"bytes"
 	"fmt"
-	cmp "github.com/go-json-experiment/json/internal/go120/cmp"
-	maps "github.com/go-json-experiment/json/internal/go120/maps"
-	slices "github.com/go-json-experiment/json/internal/go120/slices"
+	cmp "github.com/metacubex/jsonv2/internal/go120/cmp"
+	maps "github.com/metacubex/jsonv2/internal/go120/maps"
+	slices "github.com/metacubex/jsonv2/internal/go120/slices"
 	"go/ast"
 	"go/format"
 	"go/parser"

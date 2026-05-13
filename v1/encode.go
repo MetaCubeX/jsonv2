@@ -24,7 +24,7 @@ import (
 	"reflect"
 	"strconv"
 
-	jsonv2 "github.com/go-json-experiment/json"
+	jsonv2 "github.com/metacubex/jsonv2"
 )
 
 // Marshal returns the JSON encoding of v.

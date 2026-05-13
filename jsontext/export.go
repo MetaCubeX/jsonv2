@@ -9,7 +9,7 @@ package jsontext
 import (
 	"io"
 
-	"github.com/go-json-experiment/json/internal"
+	"github.com/metacubex/jsonv2/internal"
 )
 
 // TODO(https://go.dev/issue/73435): Remove the Internal symbol.

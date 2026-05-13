@@ -9,8 +9,8 @@ package json
 import (
 	"errors"
 	"fmt"
-	cmp "github.com/go-json-experiment/json/internal/go120/cmp"
-	slices "github.com/go-json-experiment/json/internal/go120/slices"
+	cmp "github.com/metacubex/jsonv2/internal/go120/cmp"
+	slices "github.com/metacubex/jsonv2/internal/go120/slices"
 	"io"
 	"reflect"
 	"strconv"
@@ -18,8 +18,8 @@ import (
 	"unicode"
 	"unicode/utf8"
 
-	"github.com/go-json-experiment/json/internal/jsonflags"
-	"github.com/go-json-experiment/json/internal/jsonwire"
+	"github.com/metacubex/jsonv2/internal/jsonflags"
+	"github.com/metacubex/jsonv2/internal/jsonwire"
 )
 
 type isZeroer interface {

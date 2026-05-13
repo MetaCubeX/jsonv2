@@ -11,7 +11,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/go-json-experiment/json/jsontext"
+	"github.com/metacubex/jsonv2/jsontext"
 )
 
 func TestExperimentalFormatSupport(t *testing.T) {

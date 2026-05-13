@@ -11,8 +11,8 @@ import (
 	"errors"
 	"io"
 
-	jsonv2 "github.com/go-json-experiment/json"
-	"github.com/go-json-experiment/json/jsontext"
+	jsonv2 "github.com/metacubex/jsonv2"
+	"github.com/metacubex/jsonv2/jsontext"
 )
 
 // A Decoder reads and decodes JSON values from an input stream.

@@ -20,7 +20,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/go-json-experiment/json/internal/jsontest"
+	"github.com/metacubex/jsonv2/internal/jsontest"
 )
 
 type codeResponse struct {

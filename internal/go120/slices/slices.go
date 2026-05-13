@@ -3,8 +3,8 @@ package slices
 import (
 	"sort"
 
-	"github.com/go-json-experiment/json/internal/go120/cmp"
-	"github.com/go-json-experiment/json/internal/go120/iter"
+	"github.com/metacubex/jsonv2/internal/go120/cmp"
+	"github.com/metacubex/jsonv2/internal/go120/iter"
 )
 
 func Equal[S ~[]E, E comparable](s1 S, s2 S) bool {

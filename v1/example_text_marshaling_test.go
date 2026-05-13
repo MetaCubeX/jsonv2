@@ -11,7 +11,7 @@ import (
 	"log"
 	"strings"
 
-	"github.com/go-json-experiment/json/v1"
+	"github.com/metacubex/jsonv2/v1"
 )
 
 type Size int

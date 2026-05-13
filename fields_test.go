@@ -12,8 +12,8 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/go-json-experiment/json/internal/jsontest"
-	"github.com/go-json-experiment/json/jsontext"
+	"github.com/metacubex/jsonv2/internal/jsontest"
+	"github.com/metacubex/jsonv2/jsontext"
 )
 
 type unexported struct{}

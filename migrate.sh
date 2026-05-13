@@ -23,19 +23,19 @@ for X in $(git ls-files --cached --others --exclude-standard | grep ".*[.]go$");
     sed -i 's/go:build goexperiment.jsonv2 && !goexperiment.jsonformat$/go:build (!goexperiment.jsonv2 || !go1.25) \&\& !goexperiment.jsonformat/' $X
     sed -i 's/go:build goexperiment.jsonv2 && goexperiment.jsonformat$/go:build (!goexperiment.jsonv2 || !go1.25) \&\& goexperiment.jsonformat/' $X
     sed -i 's/go:build goexperiment.jsonv2$/go:build !goexperiment.jsonv2 || !go1.25/' $X
-    sed -i 's|"encoding/json/v2"|"github.com/go-json-experiment/json"|' $X
-    sed -i 's|"encoding/json/internal"|"github.com/go-json-experiment/json/internal"|' $X
-    sed -i 's|"encoding/json/internal/jsonflags"|"github.com/go-json-experiment/json/internal/jsonflags"|' $X
-    sed -i 's|"encoding/json/internal/jsonopts"|"github.com/go-json-experiment/json/internal/jsonopts"|' $X
-    sed -i 's|"encoding/json/internal/jsontest"|"github.com/go-json-experiment/json/internal/jsontest"|' $X
-    sed -i 's|"encoding/json/internal/jsonwire"|"github.com/go-json-experiment/json/internal/jsonwire"|' $X
-    sed -i 's|"encoding/json/jsontext"|"github.com/go-json-experiment/json/jsontext"|' $X
-    sed -i 's|"encoding/json"|"github.com/go-json-experiment/json/v1"|' $X
-    sed -i 's|"internal/zstd"|"github.com/go-json-experiment/json/internal/zstd"|' $X
+    sed -i 's|"encoding/json/v2"|"github.com/metacubex/jsonv2"|' $X
+    sed -i 's|"encoding/json/internal"|"github.com/metacubex/jsonv2/internal"|' $X
+    sed -i 's|"encoding/json/internal/jsonflags"|"github.com/metacubex/jsonv2/internal/jsonflags"|' $X
+    sed -i 's|"encoding/json/internal/jsonopts"|"github.com/metacubex/jsonv2/internal/jsonopts"|' $X
+    sed -i 's|"encoding/json/internal/jsontest"|"github.com/metacubex/jsonv2/internal/jsontest"|' $X
+    sed -i 's|"encoding/json/internal/jsonwire"|"github.com/metacubex/jsonv2/internal/jsonwire"|' $X
+    sed -i 's|"encoding/json/jsontext"|"github.com/metacubex/jsonv2/jsontext"|' $X
+    sed -i 's|"encoding/json"|"github.com/metacubex/jsonv2/v1"|' $X
+    sed -i 's|"internal/zstd"|"github.com/metacubex/jsonv2/internal/zstd"|' $X
     goimports -w $X
 done
 sed -i 's/v2[.]struct/json.struct/' $JSONROOT/errors_test.go
-sed -i 's|jsonv1 "github.com/go-json-experiment/json/v1"|jsonv1 "encoding/json"|' $JSONROOT/bench_test.go
+sed -i 's|jsonv1 "github.com/metacubex/jsonv2/v1"|jsonv1 "encoding/json"|' $JSONROOT/bench_test.go
 sed -i '/testenv/d' $JSONROOT/jsontext/token_test.go
 
 # Remove documentation that only makes sense within the stdlib.

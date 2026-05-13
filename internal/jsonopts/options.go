@@ -7,8 +7,8 @@
 package jsonopts
 
 import (
-	"github.com/go-json-experiment/json/internal"
-	"github.com/go-json-experiment/json/internal/jsonflags"
+	"github.com/metacubex/jsonv2/internal"
+	"github.com/metacubex/jsonv2/internal/jsonflags"
 )
 
 // Options is the common options type shared across json packages.
@@ -18,7 +18,7 @@ type Options interface {
 }
 
 // experimentalFormatTagSupporter is a special option method that allows
-// [github.com/go-json-experiment/json.ExperimentalSupportFormatTag]
+// [github.com/metacubex/jsonv2.ExperimentalSupportFormatTag]
 // to enable experimental `format` tag functionality at runtime.
 type experimentalFormatTagSupporter interface{ ExperimentalSupportFormatTag() bool }
 

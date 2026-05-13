@@ -8,13 +8,13 @@ package jsontext
 
 import (
 	"errors"
-	iter "github.com/go-json-experiment/json/internal/go120/iter"
+	iter "github.com/metacubex/jsonv2/internal/go120/iter"
 	"math"
 	"strconv"
 	"strings"
 	"unicode/utf8"
 
-	"github.com/go-json-experiment/json/internal/jsonwire"
+	"github.com/metacubex/jsonv2/internal/jsonwire"
 )
 
 // ErrDuplicateName indicates that a JSON token could not be

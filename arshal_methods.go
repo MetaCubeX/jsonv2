@@ -12,11 +12,11 @@ import (
 	"io"
 	"reflect"
 
-	"github.com/go-json-experiment/json/internal"
-	"github.com/go-json-experiment/json/internal/jsonflags"
-	"github.com/go-json-experiment/json/internal/jsonopts"
-	"github.com/go-json-experiment/json/internal/jsonwire"
-	"github.com/go-json-experiment/json/jsontext"
+	"github.com/metacubex/jsonv2/internal"
+	"github.com/metacubex/jsonv2/internal/jsonflags"
+	"github.com/metacubex/jsonv2/internal/jsonopts"
+	"github.com/metacubex/jsonv2/internal/jsonwire"
+	"github.com/metacubex/jsonv2/jsontext"
 )
 
 var errNonStringValue = errors.New("JSON value must be string type")

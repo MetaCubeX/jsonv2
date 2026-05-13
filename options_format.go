@@ -7,7 +7,7 @@ package json
 // NOTE: While [ExperimentalSupportFormatTag] is exported,
 // it is in an internal package and thus inaccessible for public use.
 //
-// The [github.com/go-json-experiment/json] module is kept in sync
+// The [github.com/metacubex/jsonv2] module is kept in sync
 // with the Go standard standard library and will expose this option
 // in a way that public code can now directly reference.
 

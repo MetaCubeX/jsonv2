@@ -14,7 +14,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/go-json-experiment/json/v1"
+	"github.com/metacubex/jsonv2/v1"
 )
 
 func ExampleMarshal() {

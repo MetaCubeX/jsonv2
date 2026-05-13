@@ -9,7 +9,7 @@ package jsonopts
 // NOTE: While [ExperimentalSupportFormatTag] is exported,
 // it is in an internal package and thus inaccessible for public use.
 //
-// The [github.com/go-json-experiment/json] module is kept in sync
+// The [github.com/metacubex/jsonv2] module is kept in sync
 // with the Go standard standard library and will expose this option
 // in a way that public code can now directly reference.
 
@@ -24,7 +24,7 @@ var (
 )
 
 // ExperimentalSupportFormatTag is a marker method that is specially
-// recognized by the "github.com/go-json-experiment/json" runtime.
+// recognized by the "github.com/metacubex/jsonv2" runtime.
 func (o *supportFormatTag) ExperimentalSupportFormatTag() bool {
 	return o.v
 }
@@ -32,24 +32,24 @@ func (o *supportFormatTag) ExperimentalSupportFormatTag() bool {
 // ExperimentalSupportFormatTag enables support for the `format` tag.
 //
 // WARNING: This is an experimental feature and will be removed in the future
-// as either a failed experiment or be formally included in "github.com/go-json-experiment/json"
+// as either a failed experiment or be formally included in "github.com/metacubex/jsonv2"
 // in some semantically similar form, in which case, users of this option
 // must migrate to the officially supported feature.
 //
-// The `format` tag was originally part of the "github.com/go-json-experiment/json" experiment
+// The `format` tag was originally part of the "github.com/metacubex/jsonv2" experiment
 // but support for it was removed (see https://go.dev/issue/79071) for the
-// initial release of "github.com/go-json-experiment/json" in light of the anticipation that
+// initial release of "github.com/metacubex/jsonv2" in light of the anticipation that
 // the Go language might support typed struct tags (https://go.dev/issue/74472).
 //
 // Typed struct tags are a more expressive and type-safe way to express format
 // attributes than the bespoke `format` tag option that implements a miniature
 // domain-specific language (DSL) within the "json" package itself.
 //
-// While "github.com/go-json-experiment/json" was in the experimental phase,
+// While "github.com/metacubex/jsonv2" was in the experimental phase,
 // some users were already depending on the `format` tag option.
 // This experimental option exists to provide a temporary workaround
 // until the (hopeful) inclusion of typed struct tags and support for
-// formatting directives in "github.com/go-json-experiment/json" using that language mechanism.
+// formatting directives in "github.com/metacubex/jsonv2" using that language mechanism.
 //
 // This option enables support for the `format` tag option, which specifies
 // a format flag used to specialize the formatting of the field value.

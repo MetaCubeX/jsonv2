@@ -9,7 +9,7 @@ package json_test
 import (
 	"bytes"
 	"fmt"
-	cmp "github.com/go-json-experiment/json/internal/go120/cmp"
+	cmp "github.com/metacubex/jsonv2/internal/go120/cmp"
 	"io"
 	"os"
 	"path"
@@ -21,10 +21,10 @@ import (
 
 	jsonv1 "encoding/json"
 
-	jsonv2 "github.com/go-json-experiment/json"
-	"github.com/go-json-experiment/json/internal/jsontest"
-	"github.com/go-json-experiment/json/jsontext"
-	jsonv1in2 "github.com/go-json-experiment/json/v1"
+	jsonv2 "github.com/metacubex/jsonv2"
+	"github.com/metacubex/jsonv2/internal/jsontest"
+	"github.com/metacubex/jsonv2/jsontext"
+	jsonv1in2 "github.com/metacubex/jsonv2/v1"
 )
 
 // benchVersion is the version to benchmark (either "v1", "v1in2", or "v2").

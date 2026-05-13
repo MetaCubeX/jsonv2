@@ -9,14 +9,14 @@ package json
 import (
 	"bytes"
 	"errors"
-	slices "github.com/go-json-experiment/json/internal/go120/slices"
+	slices "github.com/metacubex/jsonv2/internal/go120/slices"
 	"io"
 	"reflect"
 
-	"github.com/go-json-experiment/json/internal/jsonflags"
-	"github.com/go-json-experiment/json/internal/jsonopts"
-	"github.com/go-json-experiment/json/internal/jsonwire"
-	"github.com/go-json-experiment/json/jsontext"
+	"github.com/metacubex/jsonv2/internal/jsonflags"
+	"github.com/metacubex/jsonv2/internal/jsonopts"
+	"github.com/metacubex/jsonv2/internal/jsonwire"
+	"github.com/metacubex/jsonv2/jsontext"
 )
 
 // This package supports "embedding" a Go struct field, where the contents

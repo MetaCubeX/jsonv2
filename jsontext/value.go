@@ -9,12 +9,12 @@ package jsontext
 import (
 	"bytes"
 	"errors"
-	slices "github.com/go-json-experiment/json/internal/go120/slices"
+	slices "github.com/metacubex/jsonv2/internal/go120/slices"
 	"io"
 	"sync"
 
-	"github.com/go-json-experiment/json/internal/jsonflags"
-	"github.com/go-json-experiment/json/internal/jsonwire"
+	"github.com/metacubex/jsonv2/internal/jsonflags"
+	"github.com/metacubex/jsonv2/internal/jsonwire"
 )
 
 // AppendFloat appends src to dst as a JSON number per RFC 8259, section 6.

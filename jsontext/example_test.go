@@ -13,8 +13,8 @@ import (
 	"log"
 	"strings"
 
-	"github.com/go-json-experiment/json"
-	"github.com/go-json-experiment/json/jsontext"
+	"github.com/metacubex/jsonv2"
+	"github.com/metacubex/jsonv2/jsontext"
 )
 
 // This example demonstrates the use of the [Encoder] and [Decoder] to

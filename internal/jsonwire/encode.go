@@ -7,13 +7,13 @@
 package jsonwire
 
 import (
-	slices "github.com/go-json-experiment/json/internal/go120/slices"
+	slices "github.com/metacubex/jsonv2/internal/go120/slices"
 	"math"
 	"strconv"
 	"unicode/utf16"
 	"unicode/utf8"
 
-	"github.com/go-json-experiment/json/internal/jsonflags"
+	"github.com/metacubex/jsonv2/internal/jsonflags"
 )
 
 // escapeASCII reports whether the ASCII character needs to be escaped.
