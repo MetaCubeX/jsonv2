@@ -224,7 +224,10 @@ func diff(t *testing.T, a, b []byte) {
 }
 
 func trim(b []byte) []byte {
-	return b[:min(len(b), 20)]
+	if len(b) > 20 {
+		return b[:20]
+	}
+	return b
 }
 
 // Generate a random JSON object.

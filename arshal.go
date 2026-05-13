@@ -24,7 +24,7 @@ import (
 // in being able to hotlink references to those packages.
 var (
 	_ encoding.TextMarshaler
-	_ encoding.TextAppender
+	_ TextAppender
 	_ encoding.TextUnmarshaler
 	_ time.Time
 	_ time.Duration
@@ -50,12 +50,12 @@ var export = jsontext.Internal.Export(&internal.AllowInternalUse)
 //
 //   - If any type-specific functions in a [WithMarshalers] option match
 //     the value type, then those functions are called to encode the value.
-//     If all applicable functions return [errors.ErrUnsupported],
+//     If all applicable functions return [ErrUnsupported],
 //     then the value is encoded according to subsequent rules.
 //
 //   - If the value type implements [MarshalerTo],
 //     then the MarshalJSONTo method is called to encode the value.
-//     If the method returns [errors.ErrUnsupported],
+//     If the method returns [ErrUnsupported],
 //     then the input is encoded according to subsequent rules.
 //
 //   - If the value type implements [Marshaler],
@@ -226,12 +226,12 @@ func marshalEncode(out *jsontext.Encoder, in any, mo *jsonopts.Struct) (err erro
 //
 //   - If any type-specific functions in a [WithUnmarshalers] option match
 //     the value type, then those functions are called to decode the JSON
-//     value. If all applicable functions return [errors.ErrUnsupported],
+//     value. If all applicable functions return [ErrUnsupported],
 //     then the input is decoded according to subsequent rules.
 //
 //   - If the value type implements [UnmarshalerFrom],
 //     then the UnmarshalJSONFrom method is called to decode the JSON value.
-//     If the method returns [errors.ErrUnsupported],
+//     If the method returns [ErrUnsupported],
 //     then the input is decoded according to subsequent rules.
 //
 //   - If the value type implements [Unmarshaler],
@@ -500,6 +500,8 @@ func putStrings(s *stringSlice) {
 	if cap(*s) > 1<<10 {
 		*s = nil // avoid pinning arbitrarily large amounts of memory
 	}
-	clear(*s) // avoid pinning a reference to each string
+	for i := range *s { // avoid pinning a reference to each string
+		(*s)[i] = ""
+	}
 	stringsPools.Put(s)
 }

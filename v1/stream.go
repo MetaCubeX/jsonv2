@@ -10,7 +10,6 @@ import (
 	"bytes"
 	"errors"
 	"io"
-	"reflect"
 
 	jsonv2 "github.com/go-json-experiment/json"
 	"github.com/go-json-experiment/json/jsontext"
@@ -234,7 +233,7 @@ func (dec *Decoder) Token() (Token, error) {
 		}
 		v, err := tok.Float()
 		if err != nil {
-			return nil, &UnmarshalTypeError{Value: "number " + tok.String(), Type: reflect.TypeFor[float64](), Offset: dec.InputOffset() - int64(len(tok.String()))}
+			return nil, &UnmarshalTypeError{Value: "number " + tok.String(), Type: typeFor[float64](), Offset: dec.InputOffset() - int64(len(tok.String()))}
 		}
 		return v, nil
 	case '{', '}', '[', ']':

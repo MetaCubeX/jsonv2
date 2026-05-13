@@ -707,7 +707,7 @@ func TestMapDeterminism(t *testing.T) {
 	for _, json := range jsonPackages {
 		t.Run(path.Join("Marshal", json.Version), func(t *testing.T) {
 			outs := make(map[string]bool)
-			for range iterations {
+			for i := 0; i < iterations; i++ {
 				b, err := json.Marshal(in)
 				if err != nil {
 					t.Fatalf("json.Marshal error: %v", err)

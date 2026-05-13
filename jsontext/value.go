@@ -9,8 +9,8 @@ package jsontext
 import (
 	"bytes"
 	"errors"
+	slices "github.com/go-json-experiment/json/internal/go120/slices"
 	"io"
-	"slices"
 	"sync"
 
 	"github.com/go-json-experiment/json/internal/jsonflags"
@@ -294,7 +294,9 @@ func getObjectMembers() *[]objectMember {
 }
 func putObjectMembers(ns *[]objectMember) {
 	if cap(*ns) < 1<<10 {
-		clear(*ns) // avoid pinning name and buffer
+		for i := range *ns { // avoid pinning name and buffer
+			(*ns)[i] = objectMember{}
+		}
 		objectMemberPool.Put(ns)
 	}
 }

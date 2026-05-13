@@ -22,16 +22,16 @@ package main
 
 import (
 	"bytes"
-	"cmp"
 	"fmt"
+	cmp "github.com/go-json-experiment/json/internal/go120/cmp"
+	maps "github.com/go-json-experiment/json/internal/go120/maps"
+	slices "github.com/go-json-experiment/json/internal/go120/slices"
 	"go/ast"
 	"go/format"
 	"go/parser"
 	"go/token"
-	"maps"
 	"os"
 	"path/filepath"
-	"slices"
 	"strconv"
 	"strings"
 )

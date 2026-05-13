@@ -8,16 +8,16 @@ package json
 
 import (
 	"bytes"
-	"cmp"
 	"encoding"
 	"encoding/base32"
 	"encoding/base64"
 	"encoding/hex"
 	"errors"
 	"fmt"
+	cmp "github.com/go-json-experiment/json/internal/go120/cmp"
+	slices "github.com/go-json-experiment/json/internal/go120/slices"
 	"math"
 	"reflect"
-	"slices"
 	"strconv"
 	"strings"
 	"sync"
@@ -36,15 +36,15 @@ const optimizeCommon = true
 
 var (
 	// Most natural Go type that correspond with each JSON type.
-	anyType          = reflect.TypeFor[any]()            // JSON value
-	boolType         = reflect.TypeFor[bool]()           // JSON bool
-	stringType       = reflect.TypeFor[string]()         // JSON string
-	float64Type      = reflect.TypeFor[float64]()        // JSON number
-	mapStringAnyType = reflect.TypeFor[map[string]any]() // JSON object
-	sliceAnyType     = reflect.TypeFor[[]any]()          // JSON array
+	anyType          = typeFor[any]()            // JSON value
+	boolType         = typeFor[bool]()           // JSON bool
+	stringType       = typeFor[string]()         // JSON string
+	float64Type      = typeFor[float64]()        // JSON number
+	mapStringAnyType = typeFor[map[string]any]() // JSON object
+	sliceAnyType     = typeFor[[]any]()          // JSON array
 
-	bytesType       = reflect.TypeFor[[]byte]()
-	emptyStructType = reflect.TypeFor[struct{}]()
+	bytesType       = typeFor[[]byte]()
+	emptyStructType = typeFor[struct{}]()
 )
 
 const startDetectingCyclesAfter = 1000
@@ -278,22 +278,78 @@ func makeStringArshaler(t reflect.Type) *arshaler {
 }
 
 var (
-	appendEncodeBase16    = hex.AppendEncode
-	appendEncodeBase32    = base32.StdEncoding.AppendEncode
-	appendEncodeBase32Hex = base32.HexEncoding.AppendEncode
-	appendEncodeBase64    = base64.StdEncoding.AppendEncode
-	appendEncodeBase64URL = base64.URLEncoding.AppendEncode
+	appendEncodeBase16    = appendEncodeHex
+	appendEncodeBase32    = appendEncodeBase32Encoding(base32.StdEncoding)
+	appendEncodeBase32Hex = appendEncodeBase32Encoding(base32.HexEncoding)
+	appendEncodeBase64    = appendEncodeBase64Encoding(base64.StdEncoding)
+	appendEncodeBase64URL = appendEncodeBase64Encoding(base64.URLEncoding)
 	encodedLenBase16      = hex.EncodedLen
 	encodedLenBase32      = base32.StdEncoding.EncodedLen
 	encodedLenBase32Hex   = base32.HexEncoding.EncodedLen
 	encodedLenBase64      = base64.StdEncoding.EncodedLen
 	encodedLenBase64URL   = base64.URLEncoding.EncodedLen
-	appendDecodeBase16    = hex.AppendDecode
-	appendDecodeBase32    = base32.StdEncoding.AppendDecode
-	appendDecodeBase32Hex = base32.HexEncoding.AppendDecode
-	appendDecodeBase64    = base64.StdEncoding.AppendDecode
-	appendDecodeBase64URL = base64.URLEncoding.AppendDecode
+	appendDecodeBase16    = appendDecodeHex
+	appendDecodeBase32    = appendDecodeBase32Encoding(base32.StdEncoding)
+	appendDecodeBase32Hex = appendDecodeBase32Encoding(base32.HexEncoding)
+	appendDecodeBase64    = appendDecodeBase64Encoding(base64.StdEncoding)
+	appendDecodeBase64URL = appendDecodeBase64Encoding(base64.URLEncoding)
 )
+
+func appendEncodeHex(dst, src []byte) []byte {
+	n := len(dst)
+	dst = append(dst, make([]byte, hex.EncodedLen(len(src)))...)
+	hex.Encode(dst[n:], src)
+	return dst
+}
+
+func appendDecodeHex(dst, src []byte) ([]byte, error) {
+	buf := make([]byte, hex.DecodedLen(len(src)))
+	n, err := hex.Decode(buf, src)
+	if err != nil {
+		return dst, err
+	}
+	return append(dst, buf[:n]...), nil
+}
+
+func appendEncodeBase32Encoding(enc *base32.Encoding) func([]byte, []byte) []byte {
+	return func(dst, src []byte) []byte {
+		n := len(dst)
+		dst = append(dst, make([]byte, enc.EncodedLen(len(src)))...)
+		enc.Encode(dst[n:], src)
+		return dst
+	}
+}
+
+func appendDecodeBase32Encoding(enc *base32.Encoding) func([]byte, []byte) ([]byte, error) {
+	return func(dst, src []byte) ([]byte, error) {
+		buf := make([]byte, enc.DecodedLen(len(src)))
+		n, err := enc.Decode(buf, src)
+		if err != nil {
+			return dst, err
+		}
+		return append(dst, buf[:n]...), nil
+	}
+}
+
+func appendEncodeBase64Encoding(enc *base64.Encoding) func([]byte, []byte) []byte {
+	return func(dst, src []byte) []byte {
+		n := len(dst)
+		dst = append(dst, make([]byte, enc.EncodedLen(len(src)))...)
+		enc.Encode(dst[n:], src)
+		return dst
+	}
+}
+
+func appendDecodeBase64Encoding(enc *base64.Encoding) func([]byte, []byte) ([]byte, error) {
+	return func(dst, src []byte) ([]byte, error) {
+		buf := make([]byte, enc.DecodedLen(len(src)))
+		n, err := enc.Decode(buf, src)
+		if err != nil {
+			return dst, err
+		}
+		return append(dst, buf[:n]...), nil
+	}
+}
 
 func makeBytesArshaler(t reflect.Type, fncs *arshaler) *arshaler {
 	// NOTE: This handles both []~byte and [N]~byte.
@@ -409,7 +465,10 @@ func makeBytesArshaler(t reflect.Type, fncs *arshaler) *arshaler {
 
 			if va.Kind() == reflect.Array {
 				dst := va.Bytes()
-				clear(dst[copy(dst, b):]) // noop if len(b) <= len(dst)
+				n := copy(dst, b)
+				for i := range dst[n:] { // noop if len(b) <= len(dst)
+					dst[n+i] = 0
+				}
 				if len(b) != len(dst) && !uo.Flags.Get(jsonflags.UnmarshalArrayFromAnyLength) {
 					err := fmt.Errorf("decoded length of %d mismatches array length of %d", len(b), len(dst))
 					return newUnmarshalErrorAfter(dec, t, err)
@@ -1476,7 +1535,7 @@ func makeSliceArshaler(t reflect.Type) *arshaler {
 		if mo.Marshalers != nil {
 			marshal, _ = mo.Marshalers.(*Marshalers).lookup(marshal, t.Elem())
 		}
-		for i := range n {
+		for i := 0; i < n; i++ {
 			v := addressableValue{va.Index(i), false} // indexed slice element is always addressable
 			if err := marshal(enc, v, mo); err != nil {
 				return err
@@ -1582,7 +1641,7 @@ func makeArrayArshaler(t reflect.Type) *arshaler {
 		if mo.Marshalers != nil {
 			marshal, _ = mo.Marshalers.(*Marshalers).lookup(marshal, t.Elem())
 		}
-		for i := range n {
+		for i := 0; i < n; i++ {
 			v := addressableValue{va.Index(i), va.forcedAddr} // indexed array element is addressable if array is addressable
 			if err := marshal(enc, v, mo); err != nil {
 				return err
@@ -1755,7 +1814,7 @@ func makeInterfaceArshaler(t reflect.Type) *arshaler {
 				case jsonMarshalerType:
 					v2.Set(reflect.ValueOf(struct{ Marshaler }{va.Elem().Interface().(Marshaler)}))
 				case textAppenderType:
-					v2.Set(reflect.ValueOf(struct{ encoding.TextAppender }{va.Elem().Interface().(encoding.TextAppender)}))
+					v2.Set(reflect.ValueOf(struct{ TextAppender }{va.Elem().Interface().(TextAppender)}))
 				case textMarshalerType:
 					v2.Set(reflect.ValueOf(struct{ encoding.TextMarshaler }{va.Elem().Interface().(encoding.TextMarshaler)}))
 				}

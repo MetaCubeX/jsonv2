@@ -118,9 +118,6 @@ func (e *Encoder) Reset(w io.Writer, opts ...Options) {
 func (e *encoderState) reset(b []byte, w io.Writer, opts ...Options) {
 	e.state.reset()
 	e.encodeBuffer = encodeBuffer{Buf: b, wr: w, availBuffer: e.availBuffer, bufStats: e.bufStats}
-	if bb, ok := w.(*bytes.Buffer); ok && bb != nil {
-		e.Buf = bb.AvailableBuffer() // alias the unused buffer of bb
-	}
 	opts2 := jsonopts.Struct{} // avoid mutating e.Struct in case it is part of opts
 	opts2.Join(opts...)
 	e.Struct = opts2
@@ -185,16 +182,7 @@ func (e *encoderState) Flush() error {
 		n, _ := bb.Write(e.Buf) // never fails unless bb is nil
 		e.baseOffset += int64(n)
 
-		// If the internal buffer of bytes.Buffer is too small,
-		// append operations elsewhere in the Encoder may grow the buffer.
-		// This would be semantically correct, but hurts performance.
-		// As such, ensure 25% of the current length is always available
-		// to reduce the probability that other appends must allocate.
-		if avail := bb.Available(); avail < bb.Len()/4 {
-			bb.Grow(avail + 1)
-		}
-
-		e.Buf = bb.AvailableBuffer()
+		e.Buf = e.Buf[:0]
 		return nil
 	}
 

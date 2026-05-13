@@ -8,7 +8,7 @@ package jsontext
 
 import (
 	"fmt"
-	"slices"
+	slices "github.com/go-json-experiment/json/internal/go120/slices"
 	"strings"
 	"testing"
 	"unicode/utf8"
@@ -216,7 +216,7 @@ func TestStateMachine(t *testing.T) {
 				switch op := op.(type) {
 				case stackLengths:
 					var got []int64
-					for i := range state.Depth() {
+					for i := 0; i < state.Depth(); i++ {
 						e := state.index(i)
 						got = append(got, e.Length())
 					}
@@ -370,7 +370,7 @@ func TestObjectNamespace(t *testing.T) {
 
 			// Check that the namespace is consistent.
 			gotNames := []string{}
-			for i := range ns.length() {
+			for i := 0; i < ns.length(); i++ {
 				gotNames = append(gotNames, string(ns.getUnquoted(i)))
 			}
 			if !slices.Equal(gotNames, wantNames) {
@@ -384,7 +384,7 @@ func TestObjectNamespace(t *testing.T) {
 		}
 
 		// Insert a large number of names.
-		for i := range 64 {
+		for i := 0; i < 64; i++ {
 			ns.InsertUnquoted([]byte(fmt.Sprintf(`name%d`, i)))
 		}
 

@@ -8,9 +8,9 @@ package json
 
 import (
 	"bytes"
-	"cmp"
 	"errors"
 	"fmt"
+	cmp "github.com/go-json-experiment/json/internal/go120/cmp"
 	"math"
 	"math/bits"
 	"reflect"
@@ -26,8 +26,8 @@ import (
 )
 
 var (
-	timeDurationType = reflect.TypeFor[time.Duration]()
-	timeTimeType     = reflect.TypeFor[time.Time]()
+	timeDurationType = typeFor[time.Duration]()
+	timeTimeType     = typeFor[time.Time]()
 )
 
 func makeTimeArshaler(fncs *arshaler, t reflect.Type) *arshaler {
@@ -61,7 +61,7 @@ func makeTimeArshaler(fncs *arshaler, t reflect.Type) *arshaler {
 				return newMarshalErrorBefore(enc, t, errors.New("no default representation"+workaround))
 			}
 
-			m.td, _ = reflect.TypeAssert[time.Duration](va.Value)
+			m.td = va.Value.Interface().(time.Duration)
 			k := stringOrNumberKind(!m.isNumeric() || xe.Tokens.Last.NeedObjectName() || mo.Flags.Get(jsonflags.StringifyNumbers))
 			if err := xe.AppendRaw(k, true, m.appendMarshal); err != nil {
 				if !isSyntacticError(err) && !export.IsIOError(err) {
@@ -92,7 +92,7 @@ func makeTimeArshaler(fncs *arshaler, t reflect.Type) *arshaler {
 
 			stringify := !u.isNumeric() || xd.Tokens.Last.NeedObjectName() || uo.Flags.Get(jsonflags.StringifyNumbers)
 			var flags jsonwire.ValueFlags
-			td, _ := reflect.TypeAssert[*time.Duration](va.Addr())
+			td := va.Addr().Interface().(*time.Duration)
 			val, err := xd.ReadValue(&flags)
 			if err != nil {
 				return err
@@ -136,7 +136,7 @@ func makeTimeArshaler(fncs *arshaler, t reflect.Type) *arshaler {
 				}
 			}
 
-			m.tt, _ = reflect.TypeAssert[time.Time](va.Value)
+			m.tt = va.Value.Interface().(time.Time)
 			k := stringOrNumberKind(!m.isNumeric() || xe.Tokens.Last.NeedObjectName() || mo.Flags.Get(jsonflags.StringifyNumbers))
 			if err := xe.AppendRaw(k, !m.hasCustomFormat(), m.appendMarshal); err != nil {
 				if mo.Flags.Get(jsonflags.ReportErrorsWithLegacySemantics) {
@@ -162,7 +162,7 @@ func makeTimeArshaler(fncs *arshaler, t reflect.Type) *arshaler {
 
 			stringify := !u.isNumeric() || xd.Tokens.Last.NeedObjectName() || uo.Flags.Get(jsonflags.StringifyNumbers)
 			var flags jsonwire.ValueFlags
-			tt, _ := reflect.TypeAssert[*time.Time](va.Addr())
+			tt := va.Addr().Interface().(*time.Time)
 			val, err := xd.ReadValue(&flags)
 			if err != nil {
 				return err

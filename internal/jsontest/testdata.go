@@ -11,12 +11,11 @@ import (
 	"bytes"
 	"embed"
 	"errors"
+	slices "github.com/go-json-experiment/json/internal/go120/slices"
 	"io"
 	"io/fs"
 	"path"
-	"slices"
 	"strings"
-	"sync"
 	"time"
 
 	"github.com/go-json-experiment/json/internal/zstd"
@@ -57,7 +56,7 @@ var Data = func() (entries []Entry) {
 		entry.Name = strings.Join(words, "")
 
 		// Lazily read and decompress the test data.
-		entry.Data = sync.OnceValue(func() []byte {
+		entry.Data = onceValue(func() []byte {
 			filePath := path.Join("testdata", fi.Name())
 			b := mustGet(fs.ReadFile(testdataFS, filePath))
 			zr := zstd.NewReader(bytes.NewReader(b))

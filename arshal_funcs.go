@@ -32,7 +32,7 @@ type Marshalers = typedMarshalers
 // JoinMarshalers constructs a flattened list of marshal functions.
 // If multiple functions in the list are applicable for a value of a given type,
 // then those earlier in the list take precedence over those that come later.
-// If a function returns [errors.ErrUnsupported],
+// If a function returns [ErrUnsupported],
 // then the next applicable function is called,
 // otherwise the default marshaling behavior is used.
 //
@@ -55,7 +55,7 @@ type Unmarshalers = typedUnmarshalers
 // JoinUnmarshalers constructs a flattened list of unmarshal functions.
 // If multiple functions in the list are applicable for a value of a given type,
 // then those earlier in the list take precedence over those that come later.
-// If a function returns [errors.ErrUnsupported],
+// If a function returns [ErrUnsupported],
 // then the next applicable function is called,
 // otherwise the default unmarshaling behavior is used.
 //
@@ -144,7 +144,7 @@ func (a *typedArshalers[Coder]) lookup(fnc func(*Coder, addressableValue, *jsono
 	fncDefault := fnc
 	fnc = func(c *Coder, v addressableValue, o *jsonopts.Struct) error {
 		for _, fnc := range fncs {
-			if err := fnc(c, v, o); !errors.Is(err, errors.ErrUnsupported) {
+			if err := fnc(c, v, o); !errors.Is(err, ErrUnsupported) {
 				return err // may be nil or non-nil
 			}
 		}
@@ -164,14 +164,14 @@ func (a *typedArshalers[Coder]) lookup(fnc func(*Coder, addressableValue, *jsono
 //
 // The function must marshal exactly one JSON value.
 // The value of T must not be retained outside the function call.
-// It may not return [errors.ErrUnsupported].
+// It may not return [ErrUnsupported].
 func MarshalFunc[T any](fn func(T) ([]byte, error)) *Marshalers {
-	t := reflect.TypeFor[T]()
+	t := typeFor[T]()
 	assertCastableTo(t, true)
 	typFnc := typedMarshaler{
 		typ: t,
 		fnc: func(enc *jsontext.Encoder, va addressableValue, mo *jsonopts.Struct) error {
-			v, _ := reflect.TypeAssert[T](va.castTo(t))
+			v := va.castTo(t).Interface().(T)
 			val, err := fn(v)
 			if err != nil {
 				err = wrapErrUnsupported(err, "marshal function of type func(T) ([]byte, error)")
@@ -203,13 +203,13 @@ func MarshalFunc[T any](fn func(T) ([]byte, error)) *Marshalers {
 // if T is an interface or pointer type.
 //
 // The function must marshal exactly one JSON value by calling write methods
-// on the provided encoder. It may return [errors.ErrUnsupported] such that marshaling can
+// on the provided encoder. It may return [ErrUnsupported] such that marshaling can
 // move on to the next marshal function. However, no mutable method calls may
-// be called on the encoder if [errors.ErrUnsupported] is returned.
+// be called on the encoder if [ErrUnsupported] is returned.
 // The pointer to [jsontext.Encoder] and the value of T
 // must not be retained outside the function call.
 func MarshalToFunc[T any](fn func(*jsontext.Encoder, T) error) *Marshalers {
-	t := reflect.TypeFor[T]()
+	t := typeFor[T]()
 	assertCastableTo(t, true)
 	typFnc := typedMarshaler{
 		typ: t,
@@ -217,7 +217,7 @@ func MarshalToFunc[T any](fn func(*jsontext.Encoder, T) error) *Marshalers {
 			xe := export.Encoder(enc)
 			prevDepth, prevLength := xe.Tokens.DepthLength()
 			xe.Flags.Set(jsonflags.WithinArshalCall | 1)
-			v, _ := reflect.TypeAssert[T](va.castTo(t))
+			v := va.castTo(t).Interface().(T)
 			err := fn(enc, v)
 			xe.Flags.Set(jsonflags.WithinArshalCall | 0)
 			currDepth, currLength := xe.Tokens.DepthLength()
@@ -225,9 +225,9 @@ func MarshalToFunc[T any](fn func(*jsontext.Encoder, T) error) *Marshalers {
 				err = errNonSingularValue
 			}
 			if err != nil {
-				if errors.Is(err, errors.ErrUnsupported) {
+				if errors.Is(err, ErrUnsupported) {
 					if prevDepth == currDepth && prevLength == currLength {
-						return err // forward [errors.ErrUnsupported]
+						return err // forward [ErrUnsupported]
 					}
 					err = errUnsupportedMutation
 				}
@@ -254,9 +254,9 @@ func MarshalToFunc[T any](fn func(*jsontext.Encoder, T) error) *Marshalers {
 // The function must unmarshal exactly one JSON value.
 // The input []byte must not be mutated.
 // The input []byte and value T must not be retained outside the function call.
-// It may not return [errors.ErrUnsupported].
+// It may not return [ErrUnsupported].
 func UnmarshalFunc[T any](fn func([]byte, T) error) *Unmarshalers {
-	t := reflect.TypeFor[T]()
+	t := typeFor[T]()
 	assertCastableTo(t, false)
 	typFnc := typedUnmarshaler{
 		typ: t,
@@ -265,7 +265,7 @@ func UnmarshalFunc[T any](fn func([]byte, T) error) *Unmarshalers {
 			if err != nil {
 				return err // must be a syntactic or I/O error
 			}
-			v, _ := reflect.TypeAssert[T](va.castTo(t))
+			v := va.castTo(t).Interface().(T)
 			err = fn(val, v)
 			if err != nil {
 				err = wrapErrUnsupported(err, "unmarshal function of type func([]byte, T) error")
@@ -287,13 +287,13 @@ func UnmarshalFunc[T any](fn func([]byte, T) error) *Unmarshalers {
 // The function is always provided with a non-nil pointer value.
 //
 // The function must unmarshal exactly one JSON value by calling read methods
-// on the provided decoder. It may return [errors.ErrUnsupported] such that unmarshaling can
+// on the provided decoder. It may return [ErrUnsupported] such that unmarshaling can
 // move on to the next unmarshal function. However, no mutable method calls may
-// be called on the decoder if [errors.ErrUnsupported] is returned.
+// be called on the decoder if [ErrUnsupported] is returned.
 // The pointer to [jsontext.Decoder] and the value of T
 // must not be retained outside the function call.
 func UnmarshalFromFunc[T any](fn func(*jsontext.Decoder, T) error) *Unmarshalers {
-	t := reflect.TypeFor[T]()
+	t := typeFor[T]()
 	assertCastableTo(t, false)
 	typFnc := typedUnmarshaler{
 		typ: t,
@@ -304,7 +304,7 @@ func UnmarshalFromFunc[T any](fn func(*jsontext.Decoder, T) error) *Unmarshalers
 				return io.EOF // check EOF early to avoid fn reporting an EOF
 			}
 			xd.Flags.Set(jsonflags.WithinArshalCall | 1)
-			v, _ := reflect.TypeAssert[T](va.castTo(t))
+			v := va.castTo(t).Interface().(T)
 			err := fn(dec, v)
 			xd.Flags.Set(jsonflags.WithinArshalCall | 0)
 			currDepth, currLength := xd.Tokens.DepthLength()
@@ -312,9 +312,9 @@ func UnmarshalFromFunc[T any](fn func(*jsontext.Decoder, T) error) *Unmarshalers
 				err = errNonSingularValue
 			}
 			if err != nil {
-				if errors.Is(err, errors.ErrUnsupported) {
+				if errors.Is(err, ErrUnsupported) {
 					if prevDepth == currDepth && prevLength == currLength {
-						return err // forward [errors.ErrUnsupported]
+						return err // forward [ErrUnsupported]
 					}
 					err = errUnsupportedMutation
 				}

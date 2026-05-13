@@ -19,13 +19,13 @@ import (
 func TestIntern(t *testing.T) {
 	var sc stringCache
 	const alphabet = "abcdefghijklmnopqrstuvwxyz"
-	for i := range len(alphabet) + 1 {
+	for i := 0; i < len(alphabet)+1; i++ {
 		want := alphabet[i:]
 		if got := makeString(&sc, []byte(want)); got != want {
 			t.Fatalf("make = %v, want %v", got, want)
 		}
 	}
-	for i := range 1000 {
+	for i := 0; i < 1000; i++ {
 		want := fmt.Sprintf("test%b", i)
 		if got := makeString(&sc, []byte(want)); got != want {
 			t.Fatalf("make = %v, want %v", got, want)
@@ -67,7 +67,7 @@ func BenchmarkIntern(b *testing.B) {
 	}{
 		// Best is the best case scenario where every string is the same.
 		{"Best", func() (out [][]byte) {
-			for range 1000 {
+			for i := 0; i < 1000; i++ {
 				out = append(out, []byte("hello, world!"))
 			}
 			return out
@@ -77,7 +77,7 @@ func BenchmarkIntern(b *testing.B) {
 		// This commonly occurs when unmarshaling a JSON array of JSON objects,
 		// where the set of all names is usually small.
 		{"Repeat", func() (out [][]byte) {
-			for range 100 {
+			for i := 0; i < 100; i++ {
 				for _, s := range []string{"first_name", "last_name", "age", "address", "street_address", "city", "state", "postal_code", "phone_numbers", "gender"} {
 					out = append(out, []byte(s))
 				}
@@ -94,7 +94,7 @@ func BenchmarkIntern(b *testing.B) {
 		// Worst is the worst case scenario where every string is different
 		// resulting in wasted time looking up a string that will never match.
 		{"Worst", func() (out [][]byte) {
-			for i := range 1000 {
+			for i := 0; i < 1000; i++ {
 				out = append(out, []byte(fmt.Sprintf("%016x", i)))
 			}
 			return out
@@ -107,7 +107,7 @@ func BenchmarkIntern(b *testing.B) {
 			// This provides an upper bound on the number of allocations.
 			b.Run("Alloc", func(b *testing.B) {
 				b.ReportAllocs()
-				for range b.N {
+				for i := 0; i < b.N; i++ {
 					for _, b := range tt.data {
 						sink = string(b)
 					}
@@ -118,7 +118,7 @@ func BenchmarkIntern(b *testing.B) {
 			// and also keeping the number of allocations closer to GoMap.
 			b.Run("Cache", func(b *testing.B) {
 				b.ReportAllocs()
-				for range b.N {
+				for i := 0; i < b.N; i++ {
 					var sc stringCache
 					for _, b := range tt.data {
 						sink = makeString(&sc, b)
@@ -129,7 +129,7 @@ func BenchmarkIntern(b *testing.B) {
 			// This provides a lower bound on the number of allocations.
 			b.Run("GoMap", func(b *testing.B) {
 				b.ReportAllocs()
-				for range b.N {
+				for i := 0; i < b.N; i++ {
 					m := make(map[string]string)
 					for _, b := range tt.data {
 						s, ok := m[string(b)]

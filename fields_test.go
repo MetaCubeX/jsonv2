@@ -247,7 +247,7 @@ func TestMakeStructFields(t *testing.T) {
 		}{},
 		want: structFields{inlinedFallback: &structField{
 			index: []int{0},
-			typ:   reflect.TypeFor[map[string]any](),
+			typ:   typeFor[map[string]any](),
 			fieldOptions: fieldOptions{
 				name:       "A",
 				quotedName: `"A"`,
@@ -262,7 +262,7 @@ func TestMakeStructFields(t *testing.T) {
 		}{},
 		want: structFields{flattened: []structField{{
 			index: []int{0, 0},
-			typ:   reflect.TypeFor[encoding.TextMarshaler](),
+			typ:   typeFor[encoding.TextMarshaler](),
 			fieldOptions: fieldOptions{
 				name:       "TextMarshaler",
 				quotedName: `"TextMarshaler"`,
@@ -272,17 +272,17 @@ func TestMakeStructFields(t *testing.T) {
 	}, {
 		name: jsontest.Name("InlineTextAppender"),
 		in: struct {
-			A struct{ encoding.TextAppender } `json:",inline"`
+			A struct{ TextAppender } `json:",inline"`
 		}{},
 		want: structFields{flattened: []structField{{
 			index: []int{0, 0},
-			typ:   reflect.TypeFor[encoding.TextAppender](),
+			typ:   typeFor[TextAppender](),
 			fieldOptions: fieldOptions{
 				name:       "TextAppender",
 				quotedName: `"TextAppender"`,
 			},
 		}}},
-		wantErr: errors.New(`inlined Go struct field A of type struct { encoding.TextAppender } must not implement marshal or unmarshal methods`),
+		wantErr: errors.New(`inlined Go struct field A of type struct { json.TextAppender } must not implement marshal or unmarshal methods`),
 	}, {
 		name: jsontest.Name("InlineJSONMarshaler"),
 		in: struct {
@@ -290,7 +290,7 @@ func TestMakeStructFields(t *testing.T) {
 		}{},
 		want: structFields{flattened: []structField{{
 			index: []int{0, 0},
-			typ:   reflect.TypeFor[Marshaler](),
+			typ:   typeFor[Marshaler](),
 			fieldOptions: fieldOptions{
 				name:       "Marshaler",
 				quotedName: `"Marshaler"`,
@@ -304,7 +304,7 @@ func TestMakeStructFields(t *testing.T) {
 		}{},
 		want: structFields{flattened: []structField{{
 			index: []int{0, 0},
-			typ:   reflect.TypeFor[MarshalerTo](),
+			typ:   typeFor[MarshalerTo](),
 			fieldOptions: fieldOptions{
 				name:       "MarshalerTo",
 				quotedName: `"MarshalerTo"`,
@@ -318,7 +318,7 @@ func TestMakeStructFields(t *testing.T) {
 		}{},
 		want: structFields{flattened: []structField{{
 			index: []int{0, 0},
-			typ:   reflect.TypeFor[encoding.TextUnmarshaler](),
+			typ:   typeFor[encoding.TextUnmarshaler](),
 			fieldOptions: fieldOptions{
 				name:       "TextUnmarshaler",
 				quotedName: `"TextUnmarshaler"`,
@@ -332,7 +332,7 @@ func TestMakeStructFields(t *testing.T) {
 		}{},
 		want: structFields{flattened: []structField{{
 			index: []int{0, 0},
-			typ:   reflect.TypeFor[Unmarshaler](),
+			typ:   typeFor[Unmarshaler](),
 			fieldOptions: fieldOptions{
 				name:       "Unmarshaler",
 				quotedName: `"Unmarshaler"`,
@@ -346,7 +346,7 @@ func TestMakeStructFields(t *testing.T) {
 		}{},
 		want: structFields{flattened: []structField{{
 			index: []int{0, 0},
-			typ:   reflect.TypeFor[UnmarshalerFrom](),
+			typ:   typeFor[UnmarshalerFrom](),
 			fieldOptions: fieldOptions{
 				name:       "UnmarshalerFrom",
 				quotedName: `"UnmarshalerFrom"`,

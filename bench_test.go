@@ -8,8 +8,8 @@ package json_test
 
 import (
 	"bytes"
-	"cmp"
 	"fmt"
+	cmp "github.com/go-json-experiment/json/internal/go120/cmp"
 	"io"
 	"os"
 	"path"
@@ -162,7 +162,7 @@ var arshalTestdata = []struct {
 	name: "Map/ManyEmpty",
 	raw:  []byte(`[{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]`),
 	val: addr(func() (out []map[string]string) {
-		for range 100 {
+		for i := 0; i < 100; i++ {
 			out = append(out, map[string]string{})
 		}
 		return out
@@ -208,7 +208,7 @@ var arshalTestdata = []struct {
 	name: "Slice/ManyEmpty",
 	raw:  []byte(`[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]`),
 	val: addr(func() (out [][]string) {
-		for range 100 {
+		for i := 0; i < 100; i++ {
 			out = append(out, []string{})
 		}
 		return out
@@ -641,7 +641,7 @@ func runTestOrBench(tb testing.TB, name string, numBytes int64, run func(tb test
 			b.ResetTimer()
 			b.ReportAllocs()
 			b.SetBytes(numBytes)
-			for range b.N {
+			for i := 0; i < b.N; i++ {
 				run(b)
 			}
 		})
