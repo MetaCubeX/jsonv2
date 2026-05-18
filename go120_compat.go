@@ -1,12 +1,9 @@
 package json
 
 import (
-	"errors"
 	"reflect"
 	"sync"
 )
-
-var ErrUnsupported = errors.New("unsupported operation")
 
 type TextAppender interface {
 	AppendText([]byte) ([]byte, error)
